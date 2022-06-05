@@ -1,0 +1,37 @@
+#header {
+  background-color: #888888;
+}
+
+#header-text {
+  color: black;
+}
+
+#manager-card {
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 5px 5px #888888;
+}
+
+#employee-card-1 {
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 5px 5px #888888;
+}
+
+#employee-card-2 {
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 5px 5px #888888;
+}
+
+#employee-card-3 {
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 5px 5px #888888;
+}
+
+#intern-card {
+  background-color: lightgrey;
+  border-radius: 5px;
+  box-shadow: 5px 5px #888888;
+}
