@@ -1,138 +1,134 @@
 const inquirer = require("inquirer");
+const fs = require("fs");
 const Employee = require("./lib/employee");
+const Engineer = require("./lib/engineer");
+const Manager = require("./lib/manager");
+const Intern = require("./lib/intern");
 
-const value = new Employee();
+let employee;
+let name;
+let id;
+let email;
+let secondary;
+let html = "";
 
-function Manager(name, occupation, ID, email, officeNum) {
-  this.name = name;
-  this.occupation = occupation;
-  this.ID = ID;
-  this.email = email;
-  this.officeNum = officeNum;
-}
-
-function EmployeeOne(name, occupation, ID, email, github) {
-  this.name = name;
-  this.occupation = occupation;
-  this.ID = ID;
-  this.email = email;
-  this.github = github;
-}
-
-function EmployeeTwo(name, occupation, ID, email, github) {
-  this.name = name;
-  this.occupation = occupation;
-  this.ID = ID;
-  this.email = email;
-  this.github = github;
-}
-
-function EmployeeThree(name, occupation, ID, email, github) {
-  this.name = name;
-  this.occupation = occupation;
-  this.ID = ID;
-  this.email = email;
-  this.github = github;
-}
-
-function Intern(name, occupation, ID, email, school) {
-  this.name = name;
-  this.occupation = occupation;
-  this.ID = ID;
-  this.email = email;
-  this.school = school;
-}
-
-// Manager.prototype.printInfo = function () {
-//   console.log(
-//     `Name: ${this.name}\nOccupation: ${this.occupation}\nID: ${this.ID}\nEmail: ${this.email}\nOffice Number: ${this.officeNum}`
-//   );
-//console.log("\n-------------\n");
-//};
-
-// EmployeeOne.prototype.printInfo = function () {
-//     console.log(
-//     `Name: ${this.name}\nOccupation: ${this.occupation}\nID: ${this.ID}\nEmail: ${this.email}\nGitHub: ${this.github}`
-//   );
-//console.log("\n-------------\n");
-//};
-
-// EmployeeTwo.prototype.printInfo = function () {
-//   console.log(
-//     `Name: ${this.name}\nOccupation: ${this.occupation}\nID: ${this.ID}\nEmail: ${this.email}\nGitHub: ${this.github}`
-//   );
-//console.log("\n-------------\n");
-//};
-
-// EmployeeThree.prototype.printInfo = function () {
-//   console.log(
-//     `Name: ${this.name}\nOccupation: ${this.occupation}\nID: ${this.ID}\nEmail: ${this.email}\nGitHub: ${this.github}`
-//   );
-//   console.log("\n-------------\n");
-//};
-
-// Intern.prototype.printInfo = function () {
-//   console.log(
-//     `Name: ${this.name}\nOccupation: ${this.occupation}\nID: ${this.ID}\nEmail: ${this.email}\nSchool: ${this.school}`
-//   );
-//   console.log("\n-------------\n");
-//};
-
-// const jeff = new Manager("Jeff", "Manager", 1, "email@email.com", 1);
-// const alec = new EmployeeOne("Alec", "Engineer", 2, "alec@email.com", "alec1");
-// const lindsey = new EmployeeTwo(
-//   "Lindsey",
-//   "Engineer",
-//   3,
-//   "lindsey@email.com",
-//   "lindseyw"
-// );
-// const james = new EmployeeThree(
-//   "James",
-//   "Engineer",
-//   4,
-//   "james@email.com",
-//   "jamesy2"
-// );
-// const molly = new Intern(
-//   "Molly",
-//   "Intern",
-//   5,
-//   "molly@email.com",
-//   "Tech University"
-// );
-
-// jeff.printInfo();
-// alec.printInfo();
-// lindsey.printInfo();
-// james.printInfo();
-// molly.printInfo();
-
-inquirer.prompt([
+const questions = [
   {
     type: "input",
-    message: "Please enter the name of the manager:",
-    name: "managerName",
+    name: "name",
+    message: "Please enter the team member's name:",
   },
   {
     type: "input",
-    message: "What is your manager's ID number?",
-    name: "managerID",
+    name: "id",
+    message: "Please enter the team member's ID:",
   },
   {
     type: "input",
-    message: "WHat is your manager's email address?",
-    name: "managerEmail",
+    name: "email",
+    message: "Please enter the team member's email:",
   },
+];
+
+let secondaryQuestion = [
   {
     type: "input",
-    message: "What is your manager's office number?",
-    name: "managerOfficeNum",
+    name: "officeNum",
+    message: "Please enter the team member's office number:",
   },
+];
+
+const additionalMember = [
   {
-    type: "list",
-    message: "Would you like to add an engineer or intern?",
-    name: "Eng",
-    choices: ["Engineer", "Intern"],
+    type: "confirm",
+    name: "additonalMember",
+    message: "Would you like to add another team member?",
   },
-]);
+];
+
+function addEmployee() {
+  for (let i = 0; i < questions.length; i++) {
+    inquirer.prompt(questions[i]).then((answers) => {
+      name = answers.name;
+      id = answers.id;
+      email = answers.email;
+    });
+  }
+
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "role",
+        message: "What is the team member's title?",
+        choices: ["Engineer", "Intern"],
+      },
+    ])
+    .then((answer) => {
+      if (answer.title == "Engineer") {
+        createEngineer();
+      } else {
+        createIntern();
+      }
+    });
+
+  inquirer.prompt(additionalMember).then((answer) => {
+    if (answer.additionalMember) {
+      addEmployee();
+    }
+  });
+}
+
+function createEngineer() {
+  secondaryQuestion = [
+    {
+      type: "input",
+      name: "github",
+      message: "Please enter the team member's github account:",
+    },
+  ];
+
+  inquirer.prompt(secondaryQuestion).then((answer) => {
+    secondary = answer.github;
+  });
+
+  employee = new Engineer(name, id, email, secondary);
+}
+
+function createIntern() {
+  secondaryQuestion = [
+    {
+      type: "input",
+      name: "school",
+      message: "Please enter the intern's school",
+    },
+  ];
+
+  inquirer.prompt(secondaryQuestion).then((answer) => {
+    secondary = answer.school;
+  });
+
+  employee = new Intern(name, id, email, secondary);
+}
+
+function init() {
+  inquirer.prompt(questions).then((answers) => {
+    name = answers.name;
+    id = answers.id;
+    email = answers.email;
+  });
+
+  inquirer.prompt(secondaryQuestion).then((answer) => {
+    secondary = answer.office;
+  });
+
+  employee = new Manager(name, id, email, secondary);
+
+  inquirer.prompt(additionalMember).then((answer) => {
+    if (answer.additionalMember) {
+      addEmployee();
+    }
+  });
+}
+
+init();
